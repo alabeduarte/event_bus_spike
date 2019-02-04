@@ -1,18 +1,20 @@
 defmodule EventBusSpike do
-  @moduledoc """
-  Documentation for EventBusSpike.
-  """
+  @subscriber MySubscriber
 
-  @doc """
-  Hello world.
+  alias EventBus.Model.Event
 
-  ## Examples
+  def start_link() do
+    GenServer.start_link(@subscriber, {}, name: @subscriber)
 
-      iex> EventBusSpike.hello()
-      :world
+    EventBus.register_topic(:message_received)
+    EventBus.subscribe({@subscriber, [".*"]})
+  end
 
-  """
-  def hello do
-    :world
+  def publish(message) do
+    EventBus.notify(%Event{
+      id: UUID.uuid4(),
+      topic: :message_received,
+      data: %{message: message}
+    })
   end
 end
