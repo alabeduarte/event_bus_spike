@@ -1,4 +1,4 @@
-defmodule Bus.Subscriber do
+defmodule LoggerSubscriber do
   require Logger
 
   def process(event_shadow) do

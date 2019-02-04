@@ -1,12 +1,11 @@
 defmodule EventBusSpike do
-  @subscriber Bus.Subscriber
   alias EventBus.Model.Event
 
-  def subscribe(topic) do
-    GenServer.start_link(@subscriber, {}, name: @subscriber)
-
+  def subscribe(topic, subscriber \\ LoggerSubscriber) do
     EventBus.register_topic(topic)
-    EventBus.subscribe({@subscriber, [".*"]})
+    EventBus.subscribe({subscriber, [".*"]})
+
+    GenServer.start_link(subscriber, :ok, name: subscriber)
   end
 
   def publish(topic, payload, event_id \\ UUID.uuid4()) do
