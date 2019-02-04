@@ -1,8 +1,30 @@
 defmodule EventBusSpikeTest do
   use ExUnit.Case
-  doctest EventBusSpike
+  alias EventBus.Model.Event
 
-  test "greets the world" do
-    assert EventBusSpike.hello() == :world
+  setup do
+    EventBusSpike.subscribe(:foo)
+  end
+
+  test "receives message from subscribed bus" do
+    Process.sleep(500)
+
+    EventBusSpike.publish(
+      :foo,
+      %{
+        data: "test"
+      },
+      "123"
+    )
+
+    Process.sleep(500)
+
+    event = EventBus.fetch_event({:foo, "123"})
+
+    assert event == %Event{
+             id: "123",
+             topic: :foo,
+             data: "test"
+           }
   end
 end

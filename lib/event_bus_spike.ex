@@ -1,20 +1,19 @@
 defmodule EventBusSpike do
-  @subscriber MySubscriber
-
+  @subscriber Bus.Subscriber
   alias EventBus.Model.Event
 
-  def start_link() do
+  def subscribe(topic) do
     GenServer.start_link(@subscriber, {}, name: @subscriber)
 
-    EventBus.register_topic(:message_received)
+    EventBus.register_topic(topic)
     EventBus.subscribe({@subscriber, [".*"]})
   end
 
-  def publish(message) do
+  def publish(topic, payload, event_id \\ UUID.uuid4()) do
     EventBus.notify(%Event{
-      id: UUID.uuid4(),
-      topic: :message_received,
-      data: %{message: message}
+      topic: topic,
+      id: event_id,
+      data: payload.data
     })
   end
 end

@@ -1,4 +1,4 @@
-defmodule MySubscriber do
+defmodule Bus.Subscriber do
   require Logger
 
   def process(event_shadow) do
@@ -11,8 +11,6 @@ defmodule MySubscriber do
   end
 
   def handle_cast({topic, id}, state) do
-    EventBus.mark_as_completed({__MODULE__, topic, id})
-
     event = EventBus.fetch_event({topic, id})
     Logger.info(fn -> inspect(event) end)
 
