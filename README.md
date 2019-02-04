@@ -22,6 +22,8 @@ be found at [https://hexdocs.pm/event_bus_spike](https://hexdocs.pm/event_bus_sp
 ## Running locally
 
 ```iex
+$ iex -S mix
+
 iex(1)> EventBusSpike.subscribe(:foo)
 :ok
 iex(2)> EventBusSpike.publish(:foo, %{data: "testing"})
